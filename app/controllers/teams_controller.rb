@@ -1,6 +1,6 @@
 class TeamsController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_team, only: %i[show edit update destroy]
+  before_action :set_team, only: %i[show edit update destroy delegate]
 
   def index
     @teams = Team.all
@@ -38,6 +38,19 @@ class TeamsController < ApplicationController
   def update
     if @team.update(team_params)
       redirect_to @team, notice: I18n.t('views.messages.update_team')
+    else
+      flash.now[:error] = I18n.t('views.messages.failed_to_save_team')
+      render :edit
+    end
+  end
+
+  def delegate
+    @team.owner_id = params[:assigned_user_id]
+    if @team.update(team_params)
+      # binding.pry
+      DelegateMailer.delegate_mail(@team.owner.email, @team.name).deliver
+      # binding.pry
+      redirect_to @team, notice: I18n.t('views.messages.delegate_team')
     else
       flash.now[:error] = I18n.t('views.messages.failed_to_save_team')
       render :edit

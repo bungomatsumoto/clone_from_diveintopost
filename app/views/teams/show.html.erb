@@ -45,8 +45,14 @@
                       <td><%= assign.user.email %></td>
                       <td>
                         <% if @team.owner == current_user || current_user.id == assign.user.id %>
-                        <%# <% if @team.owner == current_user || current_user.email == assign.user.email %> 
+                        <%# <% if @team.owner == current_user || current_user.email == assign.user.email %>
                           <%= link_to I18n.t('views.button.delete'), team_assign_path(@team, assign), method: :delete, class: 'btn btn-sm btn-danger' %>
+                        <% end %>
+                      </td>
+                      <td>
+                        <%# オーナーであり、かつ'その'ユーザーではないユーザーであること %>
+                        <% if @team.owner == current_user && current_user.id != assign.user.id %>
+                          <%= link_to I18n.t('views.button.delegate'), delegate_team_path(@team, assigned_user_id: assign.user.id), method: :patch, class: 'btn btn-sm btn-primary' %>
                         <% end %>
                       </td>
                     </tr>
