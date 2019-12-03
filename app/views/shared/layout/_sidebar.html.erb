@@ -34,12 +34,14 @@
               <i class="fa fa-circle-o nav-icon"></i>
                 <span>
                   <%= agenda.title %>
+                  <% if @working_team.owner == current_user || current_user.id == agenda.user.id %>
                     <object>
                         <%= link_to I18n.t('views.button.delete'),agenda_path(agenda.id),class:"btn btn-sm btn-danger", method: :delete %>
                     </object>
+                    <% end %>
                     <i class="right fa fa-angle-left"></i>
                 </span>
-                <br/>
+                <br>
             </a>
             <ul class="nav nav-treeview" style="display: block;">
               <% agenda.articles.each do |article| %>

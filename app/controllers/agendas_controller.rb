@@ -24,7 +24,7 @@ class AgendasController < ApplicationController
   def destroy
     @team = @agenda.team
     if @team.owner == current_user || current_user.id == @agenda.user.id
-      @team_email = @team.users.pluck(:email)
+      @team_email = @team.members.pluck(:email)
       @agenda.destroy
       DestroyNotifierMailer.destroy_notifier_mail(@team_email, @team.name, @agenda.title).deliver
       redirect_to dashboard_url, notice: I18n.t('views.messages.destroy_agenda')
